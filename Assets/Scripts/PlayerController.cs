@@ -6,11 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f;
     private CharacterController characterController;
+    public Animator animator;
+    private Rigidbody myRB;
     
     // Start is called before the first frame update
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        myRB = GetComponent<Rigidbody>();
         
     }
 
@@ -25,7 +28,12 @@ public class PlayerController : MonoBehaviour
 
         if(move != Vector3.zero)
         {
-            Debug.Log("k" + move);
+            Debug.Log("k" + move); 
+                animator.SetBool("IsSkating", true);
+        }
+        if (move.magnitude < 1)
+        {
+            animator.SetBool("IsSkating", false);
         }
     }
 }
