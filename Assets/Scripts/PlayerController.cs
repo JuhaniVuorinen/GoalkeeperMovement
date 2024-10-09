@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float accelerationTime = 2.0f;
     public GameObject Puck;
     public float shootForce = 10.0f;
+    public float puckHeight = 0.05f;
 
     public Animator animator;
     private Rigidbody myRB;
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                currentPuck = Instantiate(Puck, transform.position + new Vector3(1, -1, 0), Quaternion.identity);
+                currentPuck = Instantiate(Puck, transform.position + new Vector3(1, puckHeight, 0), Quaternion.identity);
                 currentPuck.transform.SetParent(transform);
                 
             }
