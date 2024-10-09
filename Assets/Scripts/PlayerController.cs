@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 5.0f;
-    private CharacterController characterController;
+    public float speed = 2.0f;
+    public float smoothTime = 0.1f;
+    public float accelerationTime = 2.0f;
+
     public Animator animator;
     private Rigidbody myRB;
+    private Vector3 currentVelocity = Vector3.zero;
+    private Vector3 currentSpeed = Vector3.zero;
     
     // Start is called before the first frame update
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
         myRB = GetComponent<Rigidbody>();
+        
         
     }
 
@@ -23,8 +27,16 @@ public class PlayerController : MonoBehaviour
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * moveX + transform.forward * moveZ;
-        characterController.Move(move * speed * Time.deltaTime);
+        Vector3 move = new Vector3(moveX, 0, moveZ).normalized * speed;
+
+        myRB.AddForce(move, ForceMode.Force);
+
+        move = transform.TransformDirection(move);
+
+
+        currentSpeed = Vector3.SmoothDamp(currentSpeed, move, ref currentVelocity, accelerationTime);
+
+        myRB.velocity = new Vector3(currentSpeed.x, myRB.velocity.y, currentSpeed.z);
 
         if(move != Vector3.zero)
         {
@@ -35,5 +47,8 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("IsSkating", false);
         }
+        Debug.Log("Movement:" + move);
+
+        Debug.Log("currentSpeed:" + currentSpeed);
     }
 }
