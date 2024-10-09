@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour
     public float speed = 2.0f;
     public float smoothTime = 0.1f;
     public float accelerationTime = 2.0f;
+    public GameObject Puck;
+    public float shootForce = 10.0f;
 
     public Animator animator;
     private Rigidbody myRB;
     private Vector3 currentVelocity = Vector3.zero;
     private Vector3 currentSpeed = Vector3.zero;
+    private GameObject currentPuck;
     
     // Start is called before the first frame update
     void Start()
@@ -22,7 +25,13 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+
+    private void Update()
+    {
+        handleMovement();
+        handlePuckShooting();
+    }
+    private void handleMovement()
     {
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
@@ -50,5 +59,29 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Movement:" + move);
 
         Debug.Log("currentSpeed:" + currentSpeed);
+    }
+    private void handlePuckShooting()
+    {
+        if (currentPuck == null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                currentPuck = Instantiate(Puck, transform.position + new Vector3(1, -1, 0), Quaternion.identity);
+                currentPuck.transform.SetParent(transform);
+                
+            }
+        }
+        else
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                currentPuck.transform.SetParent(null);
+                Rigidbody puckRB = currentPuck.GetComponent<Rigidbody>();
+
+                puckRB.AddForce(transform.forward * shootForce, ForceMode.Impulse);
+                Debug.Log("puckshot" + currentPuck.transform.position + "with force" + transform.forward + shootForce);
+                currentPuck = null;
+            }
+        }
     }
 }
