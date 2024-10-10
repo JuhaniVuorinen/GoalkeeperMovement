@@ -255,6 +255,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 28905137, guid: a50e4f1c31047d64498a0a2ec1583b31, type: 3}
+      propertyPath: Puck
+      value: 
+      objectReference: {fileID: 1673296085688469674, guid: 869edc7b0a26b23419e1e24af6e2d7ae, type: 3}
     - target: {fileID: 28905138, guid: a50e4f1c31047d64498a0a2ec1583b31, type: 3}
       propertyPath: m_Mass
       value: 100
@@ -568,8 +572,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599f37921e93d8b4081a0ab61471867e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puck: {fileID: 0}
+  puck: {fileID: 7669196070116284071, guid: 869edc7b0a26b23419e1e24af6e2d7ae, type: 3}
   speed: 5
+  minX: -5
+  maxX: 5
 --- !u!212 &698094069
 SpriteRenderer:
   m_ObjectHideFlags: 0

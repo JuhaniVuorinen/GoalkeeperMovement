@@ -231,12 +231,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1342dd3567f0e174f9a371437d35ffb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxPower: 15
+  powerChargeSpeed: 5
   speed: 10
-  smoothTime: 0.15
-  accelerationTime: 1
-  Puck: {fileID: 1673296085688469674, guid: 869edc7b0a26b23419e1e24af6e2d7ae, type: 3}
-  shootForce: 20
-  puckHeight: 0.1
+  accelerationTime: 0.3
+  PuckPrefab: {fileID: 1673296085688469674, guid: 869edc7b0a26b23419e1e24af6e2d7ae, type: 3}
+  puckHeight: 0.5
+  puckDistance: 1.5
   animator: {fileID: 1703448976}
 --- !u!54 &518221162
 Rigidbody:
@@ -785,7 +786,7 @@ SpriteRenderer:
   m_Size: {x: 4.63, y: 3.6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1541109555
@@ -845,7 +846,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4457823361583686, guid: ebe6f4d8c53216b47b6b8a254e9ad172, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4457823361583686, guid: ebe6f4d8c53216b47b6b8a254e9ad172, type: 3}
       propertyPath: m_LocalPosition.z

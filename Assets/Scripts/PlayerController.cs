@@ -4,85 +4,120 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float maxPower = 10.0f;
+    public float powerChargeSpeed = 5.0f;
     public float speed = 2.0f;
-    public float smoothTime = 0.1f;
-    public float accelerationTime = 2.0f;
-    public GameObject Puck;
-    public float shootForce = 10.0f;
-    public float puckHeight = 0.05f;
+    public float accelerationTime = 0.3f;
+    public GameObject PuckPrefab;
+    public float puckHeight = 0.5f;
+    public float puckDistance = 1.5f;
+
+    private float currentPower = 0f;
+    private bool isCharging = false;
+    private bool puckShot = false;
 
     public Animator animator;
     private Rigidbody myRB;
+    private Vector3 moveInput;
     private Vector3 currentVelocity = Vector3.zero;
-    private Vector3 currentSpeed = Vector3.zero;
     private GameObject currentPuck;
-    
-    // Start is called before the first frame update
+
     void Start()
     {
         myRB = GetComponent<Rigidbody>();
-        
-        
+        SpawnPuck();
     }
 
-    // Update is called once per frame
-
-    private void Update()
+    void Update()
     {
-        handleMovement();
-        handlePuckShooting();
+        HandleMovement();
+        HandlePuckShooting();
+        HandlePuckRespawn();
     }
-    private void handleMovement()
+
+    private void HandleMovement()
     {
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
-        Vector3 move = new Vector3(moveX, 0, moveZ).normalized * speed;
+        Vector3 targetDirection = (transform.right * moveX) + (transform.forward * moveZ);
+        targetDirection = targetDirection.normalized * speed;
 
-        myRB.AddForce(move, ForceMode.Force);
+        moveInput = Vector3.SmoothDamp(moveInput, targetDirection, ref currentVelocity, accelerationTime);
+        myRB.velocity = new Vector3(moveInput.x, myRB.velocity.y, moveInput.z);
 
-        move = transform.TransformDirection(move);
+        animator.SetBool("IsSkating", moveInput.magnitude > 0.1f);
 
-
-        currentSpeed = Vector3.SmoothDamp(currentSpeed, move, ref currentVelocity, accelerationTime);
-
-        myRB.velocity = new Vector3(currentSpeed.x, myRB.velocity.y, currentSpeed.z);
-
-        if(move != Vector3.zero)
+        if (currentPuck != null && !puckShot)
         {
-            Debug.Log("k" + move); 
-                animator.SetBool("IsSkating", true);
+            currentPuck.transform.position = transform.position + transform.forward * puckDistance + new Vector3(0, puckHeight, 0);
         }
-        if (move.magnitude < 1)
-        {
-            animator.SetBool("IsSkating", false);
-        }
-        Debug.Log("Movement:" + move);
-
-        Debug.Log("currentSpeed:" + currentSpeed);
     }
-    private void handlePuckShooting()
+
+    private void SpawnPuck()
     {
         if (currentPuck == null)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                currentPuck = Instantiate(Puck, transform.position + new Vector3(1, puckHeight, 0), Quaternion.identity);
-                currentPuck.transform.SetParent(transform);
-                
-            }
+            currentPuck = Instantiate(PuckPrefab, transform.position + transform.forward * puckDistance + new Vector3(0, puckHeight, 0), Quaternion.identity);
+            currentPuck.transform.SetParent(transform);
         }
-        else
+    }
+
+    private void RespawnPuck()
+    {
+        if (puckShot)
+        {
+            Destroy(currentPuck);
+            currentPuck = Instantiate(PuckPrefab, transform.position + transform.forward * puckDistance + new Vector3(0, puckHeight, 0), Quaternion.identity);
+            currentPuck.transform.SetParent(transform);
+            puckShot = false;
+        }
+    }
+
+    private void HandlePuckShooting()
+    {
+        if (currentPuck != null && !puckShot)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                currentPuck.transform.SetParent(null);
-                Rigidbody puckRB = currentPuck.GetComponent<Rigidbody>();
-
-                puckRB.AddForce(transform.forward * shootForce, ForceMode.Impulse);
-                Debug.Log("puckshot" + currentPuck.transform.position + "with force" + transform.forward + shootForce);
-                currentPuck = null;
+                isCharging = true;
+                currentPower = 0f;
             }
+
+            if (isCharging && Input.GetMouseButton(0))
+            {
+                currentPower += powerChargeSpeed * Time.deltaTime;
+                currentPower = Mathf.Clamp(currentPower, 0, maxPower);
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                isCharging = false;
+                puckShot = true;
+                currentPuck.transform.SetParent(null);
+                ShootPuck();
+            }
+        }
+    }
+
+    private void ShootPuck()
+    {
+        Rigidbody puckRB = currentPuck.GetComponent<Rigidbody>();
+        puckRB.isKinematic = false;
+
+        Vector3 shootDirection = transform.forward;
+        puckRB.AddForce(shootDirection * currentPower * 5f, ForceMode.Impulse);
+        puckRB.AddForce(Vector3.up * 1.5f, ForceMode.Impulse);
+
+        Debug.Log($"Puck shot with power: {currentPower} towards: {shootDirection}");
+        currentPower = 0f;
+    }
+
+    private void HandlePuckRespawn()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            RespawnPuck();
         }
     }
 }
