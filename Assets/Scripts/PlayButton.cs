@@ -7,7 +7,7 @@ public class PlayButton : MonoBehaviour
 {
     public void PlayGame ()
     {
-        SceneManager.LoadScene("Level_2");
+        SceneManager.LoadScene(2);
 
     }
 
