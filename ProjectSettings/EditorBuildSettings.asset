@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BostonRuins.unity
     guid: 2f5890f92fc59cc4d972cb02241784ef
+  - enabled: 1
+    path: Assets/Scenes/BostonRuinsJoonatan.unity
+    guid: d0e25715cc5756b498e6f89458dd40fa
   m_configObjects: {}
