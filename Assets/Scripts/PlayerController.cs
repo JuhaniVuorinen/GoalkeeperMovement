@@ -1,22 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public float maxPower = 10.0f;
     public float powerChargeSpeed = 5.0f;
-    public float speed = 2.0f;
+    public float speed = 3.0f;
     public float accelerationTime = 0.3f;
     public GameObject PuckPrefab;
     public float puckHeight = 0.5f;
     public float puckDistance = 1.5f;
+    public float PlayerSpeed = 5.0f;
 
     private float currentPower = 0f;
     private bool isCharging = false;
     private bool puckShot = false;
+    private bool IsHitting = true;
+    private bool IsMoving = true;
 
-    public Animator animator;
+    public Animator PlayerAnim;
     private Rigidbody myRB;
     private Vector3 moveInput;
     private Vector3 currentVelocity = Vector3.zero;
@@ -24,6 +28,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        
+        PlayerAnim = GetComponent < Animator > ();       
         myRB = GetComponent<Rigidbody>();
         SpawnPuck();
     }
@@ -33,20 +39,42 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandlePuckShooting();
         HandlePuckRespawn();
+       
+        
+       
+        
+
+
+
+            
+        
+
+
     }
 
     private void HandleMovement()
     {
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
+        
+        
 
         Vector3 targetDirection = (transform.right * moveX) + (transform.forward * moveZ);
         targetDirection = targetDirection.normalized * speed;
 
+        if (targetDirection !=Vector3.zero)
+        {
+            PlayerAnim.SetBool("IsMoving", true);
+        }
+
+       else
+        {
+            PlayerAnim.SetBool("IsMoving", false);
+        }
         moveInput = Vector3.SmoothDamp(moveInput, targetDirection, ref currentVelocity, accelerationTime);
         myRB.velocity = new Vector3(moveInput.x, myRB.velocity.y, moveInput.z);
 
-        animator.SetBool("IsSkating", moveInput.magnitude > 0.1f);
+        
 
         if (currentPuck != null && !puckShot)
         {
@@ -84,6 +112,16 @@ public class PlayerController : MonoBehaviour
                 currentPower = 0f;
             }
 
+            if (Input.GetMouseButtonDown(0))
+            {
+                PlayerAnim.SetBool("IsHitting", true);
+            }
+
+            else
+            {
+                PlayerAnim.SetBool("IsHitting", false);
+            }
+
             if (isCharging && Input.GetMouseButton(0))
             {
                 currentPower += powerChargeSpeed * Time.deltaTime;
@@ -119,5 +157,14 @@ public class PlayerController : MonoBehaviour
         {
             RespawnPuck();
         }
-    }
+    } 
+    
+
+    
+
+    
+    
 }
+    
+
+     

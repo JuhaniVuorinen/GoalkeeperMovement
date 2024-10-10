@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    public Animator animator;
+    public Animator PlayerAnim;
+    public bool IsHitting;
+    public bool IsMoving;
+
 
     public override bool Equals(object other)
     {
@@ -25,31 +28,46 @@ public class PlayerAnimator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();
-        Debug.Log(animator);
+        PlayerAnim = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("W"))
+
+
+        if (Input.GetKeyDown(KeyCode.W)) Input.GetKeyDown(KeyCode.S);
         {
-            animator.SetBool("IsSkating", true);
+            IsMoving = true;
+        }
 
-            {
-                if (!Input.GetKeyDown("W"))
-                    animator.SetBool("IsMoving", false);
-            }
-
-
-            if (Input.GetKeyDown(KeyCode.Mouse0));
-
-            animator.SetBool("IsMoving", true);
-
-            if (!Input.GetKeyDown(KeyCode.Mouse0));
-
-            animator.SetBool("IsShooting", false);
+        if (Input.GetKeyUp(KeyCode.W)) Input.GetKeyUp(KeyCode.S);
+        {
+            IsMoving = false;
+        }
 
 
-        }}
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            IsHitting = true;
+
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            IsHitting = false;
+        }
+
+        
+
+            
+
+
+
+
+
+    }
 }
+
