@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/JoonatanSampleScene.unity
     guid: 42ff532646c742546abed67e940e5ca3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BostonRuins.unity
     guid: 2f5890f92fc59cc4d972cb02241784ef
   - enabled: 1
