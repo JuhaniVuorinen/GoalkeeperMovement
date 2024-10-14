@@ -4,11 +4,11 @@ public class PuckMovement : MonoBehaviour
 {
     public float speed = 5f; // Speed of the puck's movement
     private Vector3 direction; // Direction of puck movement
-    private Rigidbody2D rb;
+    private Rigidbody rb;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
         SetInitialDirection();
     }
 
@@ -55,7 +55,7 @@ public class PuckMovement : MonoBehaviour
             }
 
             direction.Normalize();
-            Vector2 pushBack = direction * 0.1f;
+            Vector3 pushBack = direction * 0.1f;
             rb.position += pushBack;
 
             Debug.Log("Puck hit the goalkeeper! New direction: " + direction);
